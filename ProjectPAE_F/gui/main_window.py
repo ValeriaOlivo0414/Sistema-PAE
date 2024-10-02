@@ -128,19 +128,26 @@ class MainView(tk.Tk):
         documento = self.entries['Documento'].get()
 
         if validate_document(documento):
-            # Primero, eliminar las acciones del estudiante
-            delete_actions_query = "DELETE FROM EstudiantesActions WHERE Documento = %s"
-            self.db_connector.execute_query(delete_actions_query, (documento,))
+            # Mostrar mensaje de confirmación
+            confirmacion = messagebox.askyesno("Confirmación",
+                                               "¿Está seguro de que desea eliminar al estudiante y sus acciones?")
 
-            # Luego, eliminar al estudiante
-            delete_estudiante_query = "DELETE FROM Estudiantes WHERE Documento = %s"
-            self.db_connector.execute_query(delete_estudiante_query, (documento,))
+            if confirmacion:
+                # Primero, eliminar las acciones del estudiante
+                delete_actions_query = "DELETE FROM EstudiantesActions WHERE Documento = %s"
+                self.db_connector.execute_query(delete_actions_query, (documento,))
 
-            messagebox.showinfo("Información", "Estudiante y sus acciones eliminados correctamente")
-            self.clear_fields()
-            self.show_all_estudiante()
+                # Luego, eliminar al estudiante
+                delete_estudiante_query = "DELETE FROM Estudiantes WHERE Documento = %s"
+                self.db_connector.execute_query(delete_estudiante_query, (documento,))
+
+                messagebox.showinfo("Información", "Estudiante y sus acciones eliminados correctamente")
+                self.clear_fields()
+                self.show_all_estudiante()
+            else:
+                messagebox.showinfo("Cancelado", "La eliminación ha sido cancelada")
         else:
-            messagebox.showwarning("Advertencia", "El documento debe ser un número válido")
+            messagebox.showwarning("Advertencia", "Por favor ingrese el documento del estudiante")
 
     def show_all_estudiante(self):
         query = "SELECT Documento, Nombres, Apellidos, Grado FROM Estudiantes ORDER BY Apellidos, Nombres"
