@@ -82,7 +82,7 @@ class SecondWindow(tk.Toplevel):
             for headers, rows in results:
                 self.display_results(headers, rows)
         else:
-            messagebox.showinfo("Información", "No puedes registrarte fuera de los horarios permitidos")
+            messagebox.showinfo("Información", "No estás en el horario correspondiente o no estás registrado")
 
         # Limpiar el campo de entrada para el siguiente código de barras
         self.barcode_entry.delete(0, tk.END)
